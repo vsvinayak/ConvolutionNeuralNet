@@ -7,7 +7,8 @@ import os
 
 DATA_PATH = './face/'
 cnn_params = './params/gender_big.param'
-face_params = './params/haarcascade_frontalface_alt.xml'
+face_params = './params/lbpcascade_frontalface.xml'
+#face_params = './params/haarcascade_frontalface_alt.xml'
 
 if __name__ == '__main__':
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     while(True):
         val, image = cap.read()
 
-        image = cv2.pyrDown(image)
+        image = cv2.pyrDown(image, 0.15)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -58,7 +59,10 @@ if __name__ == '__main__':
             out = np.argmax(c.predict(np.array([resized_img])))
             
             res = 'Male' if out == 1 else 'Female'
-            print 'Prediction : {}'.format(res)
+            cv2.putText(image, res, (max(x-10,0), max(y-10, 0)), 
+                        cv2.FONT_HERSHEY_PLAIN, 2, 255)
+            
+            #print 'Prediction : {}'.format(res)
 
         cv2.imshow('Image', image)
         cv2.waitKey(10)
