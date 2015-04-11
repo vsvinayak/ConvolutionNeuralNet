@@ -5,8 +5,8 @@ import cv2
 import glob
 import os
 
-DATA_PATH = '/home/vinayak/Pictures/face/'
-params = '../params/gender_big.param'
+DATA_PATH = './face/'
+params = './params/gender_big.param'
 
 if __name__ == '__main__':
 
@@ -33,15 +33,20 @@ if __name__ == '__main__':
 
     c = ConvNet(d,nnet, (45,45))
     c.load_params(params)
-
+    
+    # loop through the fils
+    # '1' is for female
+    # '0' f for male
     for f in files:
         img = cv2.imread(f, 0)
         img = cv2.equalizeHist(img)
         
         resized_img = cv2.resize(img, (45,45))/255.
 
-        out = c.predict(np.array([resized_img]))
-        print 'Prediction : {}'.format(out)
+        out = np.argmax(c.predict(np.array([resized_img])))
+
+        res = 'Male' if out == 1 else 'Female'
+        print 'Prediction : {}'.format(res)
 
         cv2.imshow('Img', img)
         cv2.waitKey()
