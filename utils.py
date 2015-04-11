@@ -1,5 +1,4 @@
 
-import cv2
 import numpy as np
 
 def pool(features, pool_dim, mode='max'):
