@@ -35,8 +35,8 @@ if __name__ == '__main__':
     c.load_params(params)
     
     # loop through the fils
-    # '1' is for female
-    # '0' f for male
+    # '0' is for female
+    # '1' f for male
     for f in files:
         img = cv2.imread(f, 0)
         img = cv2.equalizeHist(img)
