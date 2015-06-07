@@ -1,5 +1,6 @@
 
 import numpy as np
+import cv2
 
 def pool(features, pool_dim, mode='max'):
     """
@@ -86,4 +87,71 @@ def activate(X, method='tanh'):
     else:                # sigmoid  
         return (1 / (1 + np.exp(-X)))
 
+
+def draw_rectangle(image, rect, color=(0,255,255)):
+    """
+    Draws a rectange on an image
+    """
+    x,y,w,h = rect
+    cv2.rectangle(image, (x,y), (x+w,y+h), color, 3)
+    return image
+
+def is_existing_face(image, trackers, face):
+    """
+    Check if the face is already an existing one among the one
+    being tracked
+    """
+
+    x1, y1, w1, h1 = face
+    face_mask = np.zeros_like(image)
+    face_mask[y1:y1+h1, x1:x1+w1] = 1
+    for t in trackers:
+        try:
+            x,y,w,h = t.bounding_box
+            t_mask = np.zeros_like(image)
+            t_mask[y:y+h, x:x+w] = 1
+
+            union = np.sum(np.bitwise_or(face_mask, t_mask))
+            intersection = np.bitwise_and(face_mask, t_mask)
+            if float(np.sum(intersection))/union > 0.3 or float(np.sum(intersection))/np.sum(t_mask+1) > 0.7:
+                return (t, True)
+        except Exception:
+            pass
+    
+    return (None, False)
+
+def in_rect(keypoints, tl, br):
+    """
+    Check if the keypoints are within
+    the rectangle
+    """
+    x = keypoints[:, 0]
+    y = keypoints[:, 1]
+
+    C1 = x > tl[0]
+    C2 = y > tl[1]
+    C3 = x < br[0]
+    C4 = y < br[1]
+
+    result = C1 & C2 & C3 & C4
+
+    return result
+
+def is_redundant(t, t_objects):
+    """
+    Checking if there is any face being tracked is redundant/duplicate
+    """
+
+    x,y,w,h = t.bounding_box
+
+    for tracker in t_objects:
+        if t.face_id == tracker.face_id:
+            continue
+        x_t, y_t, w_t, h_t = tracker.bounding_box
+        result =  in_rect(np.array([[x,y],[x+w,y], [x,y+h], [x+w,y+h]]),
+                          (x_t, y_t), (x_t+w_t, y_t+h_t))
+
+        if sum(result) > 1:
+            return True
+    return False
 

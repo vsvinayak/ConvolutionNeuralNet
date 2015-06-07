@@ -273,8 +273,8 @@ class ConvNet(object):
             
             for ker_idx in xrange(n_kernels):
                 
-                # an output feature is the sum of all convolved individual
-                # input features with a particular kernel
+            # an output feature is the sum of all convolved individual
+            # input features with a particular kernel
                 out_feature += convolve2d(features[ker_idx], 
                                               kernels[ker_set_idx][ker_idx],
                                               mode='valid')
