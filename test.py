@@ -6,7 +6,7 @@ import glob
 import os
 
 DATA_PATH = './face/'
-params = './params/gender_perfect.param'
+params = './params/gender_5x5_5_5x5_10.param'
 
 if __name__ == '__main__':
 
@@ -21,15 +21,15 @@ if __name__ == '__main__':
     # f_out1 - first layer no. of output feature arrays
     d = [{'c1':(5,5),
           'p1':(2,2),
-          'f_in1':1, 'f_out1':20}]#,
-         #{'c2':(5,5),
-         # 'p2':(2,2),
-         # 'f_in2':20, 'f_out2':100}]
+          'f_in1':1, 'f_out1':5},
+         {'c2':(5,5),
+          'p2':(2,2),
+          'f_in2':5, 'f_out2':10}]
 
     # This is the configuration of the mlp part of the CNN
     # first tuple has the fan_in and fan_out of the input layer
     # of the mlp and so on.
-    nnet =  [(8000,512),(512,2)]
+    nnet =  [(800,256),(256,2)]
 
     c = ConvNet(d,nnet, (45,45))
     c.load_params(params)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         out = np.argmax(c.predict(np.array([resized_img])))
 
         res = 'Male' if out == 1 else 'Female'
-        print 'Prediction : {}'.format(out)
+        print 'Prediction : {}'.format(res)
 
         cv2.imshow('Img', img)
         cv2.waitKey()
