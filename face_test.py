@@ -38,8 +38,8 @@ if __name__ == '__main__':
     
     face_cascade = cv2.CascadeClassifier(face_params)
 
-    #cap = cv2.VideoCapture(0)
-    cap = cv2.VideoCapture("/home/vinayak/Videos/bw.mp4")
+    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture("/home/vinayak/Videos/bw.mp4")
 
     cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
 
