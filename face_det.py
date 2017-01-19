@@ -8,6 +8,7 @@ from conv_net import *
 from settings import *
 from utils import *
 
+# redetect flag
 redetect = False
 
 # global pool of detectors and descriptors
